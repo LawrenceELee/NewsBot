@@ -5,4 +5,7 @@ Building this project provides an oppurtunity to learn the
 * Twitter API.
 * RSS/Atom feeds.
 * OAuth
-...more as ideas come to me...
+* ...more as ideas come to me...
+
+Dependencies:
+* rome-fetcher-1.0.jar

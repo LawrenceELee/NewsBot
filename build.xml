@@ -46,8 +46,9 @@
     <target name="run-rssex" description="runs my rss example" >
         <java classname="RSSFeedExample">
             <classpath>
-                <pathelement location="${dist}/lib/NewsBot.jar"/>
-                <pathelement path="lib\RSSFeed.jar"/>
+                <!-- Needs classpath to its own jar and dependency jars -->
+                <pathelement path="${dist}/lib/NewsBot.jar"/>
+                <pathelement path="lib/RSSFeed.jar"/>
             </classpath>
         </java>
     </target>
@@ -55,9 +56,30 @@
     <target name="run-romeex" description="runs my rome example" >
         <java classname="RomeLibraryExample">
             <classpath>
-                <pathelement location="${dist}/lib/NewsBot.jar"/>
-                <pathelement path="lib\rome-1.0.jar"/>
-                <pathelement path="lib\jdom-1.1.1.jar"/>
+                <!-- Needs classpath to its own jar and dependency jars -->
+                <pathelement path="${dist}/lib/NewsBot.jar"/>
+                <pathelement path="lib/rome-1.0.jar"/>
+                <pathelement path="lib/jdom-1.1.1.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="run-myfeed" description="runs MyFeedReader example" >
+        <java classname="MyFeedReader">
+            <classpath>
+                <pathelement path="${dist}/lib/NewsBot.jar"/>
+                <pathelement path="lib/rome-1.0.jar"/>
+                <pathelement path="lib/jdom-1.1.1.jar"/>
+            </classpath>
+            <!-- Use argX variables to pass cmd line args to java prg-->
+            <arg value="${arg0}"/>
+        </java>
+    </target>
+
+    <target name="run-news" description="runs my news bot" >
+        <java classname="NewsBot">
+            <classpath>
+                <pathelement path="${dist}/lib/NewsBot.jar"/>
             </classpath>
         </java>
     </target>

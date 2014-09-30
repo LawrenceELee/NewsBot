@@ -21,7 +21,7 @@
             <classpath>
                 <pathelement path="lib\rome-1.0.jar"/>
                 <pathelement path="lib\jdom-1.1.1.jar"/>
-                <pathelement path="lib\RSSFeed-20140929.jar"/>
+                <pathelement path="lib\RSSFeed.jar"/>
                 <!--
                 -->
             </classpath>
@@ -33,8 +33,7 @@
         <!-- Create the distribution directory -->
         <mkdir dir="${dist}/lib"/>
 
-        <!-- Put everything in ${build} into the NewsBot-${DSTAMP}.jar file -->
-        <jar jarfile="${dist}/lib/NewsBot-${DSTAMP}.jar" basedir="${build}"/>
+        <jar jarfile="${dist}/lib/NewsBot.jar" basedir="${build}"/>
     </target>
 
     <target name="clean"
@@ -44,12 +43,11 @@
         <delete dir="${dist}"/>
     </target>
 
-    <!-- Below is not working
     <target name="run-rssex" description="runs my rss example" >
         <java classname="RSSFeedExample">
             <classpath>
-                <pathelement location="${dist}/lib/NewsBot-${DSTAMP}.jar"/>
-                <pathelement path="lib\RSSFeed-20140929.jar"/>
+                <pathelement location="${dist}/lib/NewsBot.jar"/>
+                <pathelement path="lib\RSSFeed.jar"/>
             </classpath>
         </java>
     </target>
@@ -57,12 +55,11 @@
     <target name="run-romeex" description="runs my rome example" >
         <java classname="RomeLibraryExample">
             <classpath>
-                <pathelement location="${dist}/lib/NewsBot-${DSTAMP}.jar"/>
+                <pathelement location="${dist}/lib/NewsBot.jar"/>
                 <pathelement path="lib\rome-1.0.jar"/>
                 <pathelement path="lib\jdom-1.1.1.jar"/>
             </classpath>
         </java>
     </target>
-    -->
 
 </project>

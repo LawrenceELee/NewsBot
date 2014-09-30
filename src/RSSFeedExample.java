@@ -5,7 +5,7 @@
  *
  * ************************************************** */
 
-class RSSFeedExample{
+public class RSSFeedExample{
 
     //tester/driver
     public static void main(String[] args) {

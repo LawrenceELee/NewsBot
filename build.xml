@@ -18,12 +18,13 @@
         description="compile the source " >
         <!-- Compile the java code from ${src} into ${build} -->
         <javac srcdir="${src}" destdir="${build}">
-        <!--
             <classpath>
-                <pathelement path="lib/rome-fetcher-1.0.jar"/>
-                <pathelement path="lib/jdom-1.1.3.jar"/>
+                <pathelement path="lib\rome-1.0.jar"/>
+                <pathelement path="lib\jdom-1.1.1.jar"/>
+                <pathelement path="lib\RSSFeed-20140929.jar"/>
+                <!--
+                -->
             </classpath>
-        -->
         </javac>
     </target>
 

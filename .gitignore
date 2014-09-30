@@ -1,7 +1,3 @@
 *.out
 rssfeeds.txt
-FeedMessage.java
-Feed.java
-RSSFeedParser.java
-ReadTest.java
 !lib/*

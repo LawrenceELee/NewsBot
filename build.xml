@@ -43,4 +43,26 @@
         <delete dir="${build}"/>
         <delete dir="${dist}"/>
     </target>
+
+    <!-- Below is not working
+    <target name="run-rssex" description="runs my rss example" >
+        <java classname="RSSFeedExample">
+            <classpath>
+                <pathelement location="${dist}/lib/NewsBot-${DSTAMP}.jar"/>
+                <pathelement path="lib\RSSFeed-20140929.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="run-romeex" description="runs my rome example" >
+        <java classname="RomeLibraryExample">
+            <classpath>
+                <pathelement location="${dist}/lib/NewsBot-${DSTAMP}.jar"/>
+                <pathelement path="lib\rome-1.0.jar"/>
+                <pathelement path="lib\jdom-1.1.1.jar"/>
+            </classpath>
+        </java>
+    </target>
+    -->
+
 </project>

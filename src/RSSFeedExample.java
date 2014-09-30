@@ -5,7 +5,7 @@
  *
  * ************************************************** */
 
-class NewsBot{
+class RSSFeedExample{
 
     //tester/driver
     public static void main(String[] args) {

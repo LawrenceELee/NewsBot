@@ -76,8 +76,18 @@
         </java>
     </target>
 
-    <target name="run-news" description="runs my news bot" >
+    <target name="run-news" description="runs NewsBot" >
         <java classname="NewsBot">
+            <classpath>
+                <pathelement path="${dist}/lib/NewsBot.jar"/>
+                <pathelement path="lib/rome-1.0.jar"/>
+                <pathelement path="lib/jdom-1.1.1.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="run-testant" description="runs basic ant task" >
+        <java classname="TestAnt">
             <classpath>
                 <pathelement path="${dist}/lib/NewsBot.jar"/>
             </classpath>

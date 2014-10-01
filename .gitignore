@@ -1,3 +1,7 @@
-*.out
+rome-1.0-javadoc.jar
 rssfeeds.txt
+*.out
 !lib/*
+out/
+doc/
+target/

@@ -52,7 +52,7 @@ public class SampleStreamExample {
     client.connect();
 
     // Do whatever needs to be done with messages
-    for (int msgRead = 0; msgRead < 1000; msgRead++) {
+    for (int msgRead = 0; msgRead < 10; msgRead++) {
       if (client.isDone()) {
         System.out.println("Client connection closed unexpectedly: " + client.getExitEvent().getMessage());
         break;

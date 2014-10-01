@@ -39,3 +39,14 @@ Compile:
       (If in Windows, use ; (semi-colon). If in linux, use : (colon).)
 
 more examples: http://www.vineetmanohar.com/2009/11/3-ways-to-run-java-main-from-maven/
+
+==================================================
+twitter.properties file should be formatted like below:
+```
+#comments begin with hash mark
+#this file is located in <projectroot>/src/main/resources
+consumer_key=...your info here...
+consumer_api=...your info here...
+access_token_key=...your info here...
+access_token_secret=...your info here...
+```

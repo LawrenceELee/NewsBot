@@ -21,13 +21,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>rome</groupId>
             <artifactId>rome</artifactId>
             <version>1.0</version>
@@ -37,6 +30,13 @@
             <groupId>com.twitter</groupId>
             <artifactId>hbc-core</artifactId>
             <version>2.2.0</version>
+        </dependency>
+
+        <!-- get rid of warning message -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.6.2</version>
         </dependency>
     </dependencies>
 
@@ -48,6 +48,14 @@
                 <version>2.7</version>
                 <configuration>
                     <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>com.nb.NewsBot</mainClass>
                 </configuration>
             </plugin>
             <!--

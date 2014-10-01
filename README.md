@@ -8,13 +8,16 @@ Building this project provides an oppurtunity to learn the
 * ...more as ideas come to me...
 
 Dependencies:
-* rome-fetcher-1.0.jar
+* rome
+* hbc
 
 Compile:
 * Using maven (currently using maven, directory structure not set up for ant):
     * mvn package && mvn exec:java -Dexec.mainClass="path.to.class.App"
       mvn package will build java files (compile and make jar)
       mvn exec:java -Dexec.mainClass="path.to.class.App" will run App.class
+    * Example:
+      mvn package && mvn exec:java -Dexec.mainClass="com.twitter.hbc.example.SampleStreamExample" -Dexec.args"...your api keys here..."
 
 * Using ant:
     * ant (will build based on your build.xml)

@@ -12,10 +12,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Fill these in via https://dev.twitter.com/apps -->
+        <consumer.key>TODO</consumer.key>
+        <consumer.secret>TODO</consumer.secret>
+        <access.token>TODO</access.token>
+        <access.token.secret>TODO</access.token.secret>
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -29,20 +33,40 @@
             <version>1.0</version>
         </dependency>
 
-        <!-- Use this for ROME -->
-        <!-- This doesn't work for ROME
-        <dependency>
-            <groupId>net.java.dev.rome</groupId>
-            <artifactId>rome</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        -->
-
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>hbc-core</artifactId>
             <version>2.2.0</version>
         </dependency>
-
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <!-- mainClass will make exec:java default to SampleStreamExample
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>com.twitter.hbc.example.SampleStreamExample</mainClass>
+                    <arguments>
+                        <argument>${consumer.key}</argument>
+                        <argument>${consumer.secret}</argument>
+                        <argument>${access.token}</argument>
+                        <argument>${access.token.secret}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+            -->
+        </plugins>
+    </build>
+
 </project>

@@ -11,8 +11,7 @@
  * limitations under the License.
  **/
 
-
-package com.twitter.hbc.example;
+package com.nb;
 
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Constants;

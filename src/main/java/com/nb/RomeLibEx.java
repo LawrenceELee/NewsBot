@@ -11,10 +11,11 @@ import com.sun.syndication.io.XmlReader;
 import java.net.URL;
 import java.util.List;
 
-public class App{
+public class RomeLibEx{
     public static void main(String[] args) {
         try {
-            URL feedUrl = new URL("http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom");
+            String urlString = "http://feeds.reuters.com/reuters/topNews";
+            URL feedUrl = new URL(urlString);
 
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedUrl));

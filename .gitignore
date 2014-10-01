@@ -1,7 +1,5 @@
-rome-1.0-javadoc.jar
 rssfeeds.txt
-twitterkeys.config
-pom.xml
+*.properties
 *.out
 !lib/*
 out/

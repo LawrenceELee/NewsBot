@@ -50,7 +50,10 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <!-- mainClass will make exec:java default to SampleStreamExample
+            <!-- mainClass will make exec:java default to SampleStreamExample -->
+            <!-- manaully set it by using -->
+            <!-- mvn exec:java -Dexec.mainClass="com.twitter.hbc.example.SampleStreamExample" -Dexec.args"...your keyes here..." -->
+            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>

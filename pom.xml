@@ -32,7 +32,13 @@
             <version>2.2.0</version>
         </dependency>
 
-        <!-- get rid of warning message -->
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>[4.0,]</version>
+        </dependency>
+
+        <!-- add this dep to get rid of warning message -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -41,6 +47,21 @@
     </dependencies>
 
     <build>
+        <!-- exclude properties files from jar that maven builds -->
+        <!-- can't exclude it, because mvn runs off the jar. -->
+        <!-- just don't upload anything from target to github -->
+        <!--
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>*.properties</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        -->
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -50,6 +71,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -58,6 +80,7 @@
                     <mainClass>com.nb.NewsBot</mainClass>
                 </configuration>
             </plugin>
+            -->
             <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -60,7 +60,7 @@ public class NewsBot{
      * ************************************************** */
     public static void run(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
         // Create an appropriately sized blocking queue
-        BlockingQueue<String> queue = new LinkedBlockingQueue<String>(100);
+        BlockingQueue<String> queue = new LinkedBlockingQueue<String>(100000);
 
         // Define our endpoint: By default, delimited=length is set (we need this for our processor)
         // and stall warnings are on.
@@ -71,7 +71,7 @@ public class NewsBot{
 
         // Create a new BasicClient. By default gzip is enabled.
         BasicClient client = new ClientBuilder()
-            .name("sampleExampleClient")
+            .name("NewsBot-Client01")    // optional: mainly for the logs
             .hosts(Constants.STREAM_HOST)
             .endpoint(endpoint)
             .authentication(auth)
@@ -95,6 +95,8 @@ public class NewsBot{
                 System.out.println(msg);
             }
         }
+
+        client.stop();
     }
 
 

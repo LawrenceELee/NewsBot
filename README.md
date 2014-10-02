@@ -27,7 +27,6 @@ Compile:
         ```
 
 * Using ant:
-
         ```
         ant (will build based on your build.xml)
         ant <run-target> (will run class based on build.xml)

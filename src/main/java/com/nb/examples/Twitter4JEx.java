@@ -1,9 +1,12 @@
-package com.nb;
+package com.nb.examples;
+
+import com.nb.NewsBot;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
+import twitter4j.Status;
 
 import java.io.FileNotFoundException;
 import java.util.Properties;
@@ -23,8 +26,9 @@ public class Twitter4JEx{
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = null;
 
+        //get credentials
         try{
-            p = NewsBot.getPropValues();
+            p = NewsBot.getCredentials();
             consumerKeyStr = p.getProperty("consumer_key");
             consumerSecretStr = p.getProperty("consumer_api");
             accessTokenStr = p.getProperty("access_token_key");
@@ -33,8 +37,11 @@ public class Twitter4JEx{
             fnfe.getMessage();
         }
 
+        //post a status update
         try {
-            Twitter twitter = new TwitterFactory().getInstance();
+            //Twitter twitter = new TwitterFactory().getInstance();
+            Twitter twitter = new TwitterFactory().getSingleton();
+            Status status = null;
 
             twitter.setOAuthConsumer(consumerKeyStr, consumerSecretStr);
             AccessToken accessToken = new AccessToken(accessTokenStr,
@@ -44,9 +51,10 @@ public class Twitter4JEx{
 
             while(true){
                 date = new Date();
-                twitter.updateStatus("NewsBot " + dateFormat.format(date));
-                System.out.println("NewsBot " + dateFormat.format(date));
-                Thread.sleep(600000);
+                status = twitter.updateStatus("NewsBot " + dateFormat.format(date));
+                System.out.println("Successfully updated the status to [" +
+                        status.getText() + "].");
+                Thread.sleep(600000); //wait 10 mins between each status update
             }
 
         } catch (TwitterException te){

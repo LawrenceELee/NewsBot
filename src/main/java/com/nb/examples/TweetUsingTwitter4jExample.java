@@ -2,7 +2,7 @@
  * How to post a Tweet in Java using Twitter REST API and Twitter4J Library
  * http://codeoftheday.blogspot.com/2013/07/how-to-post-tweet-in-java-using-twitter.html
  */
-package com.nb;
+package com.nb.examples;
 
 import twitter4j.*;
 import twitter4j.auth.AccessToken;

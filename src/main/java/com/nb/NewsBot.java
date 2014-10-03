@@ -1,37 +1,44 @@
 package com.nb;
 
-//for getPropValues()
-import java.io.IOException;
+import java.lang.Exception;
+
+//for getCredentials()
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Properties;
 
-//for twitter/run
-import com.twitter.hbc.ClientBuilder;
-import com.twitter.hbc.core.Constants;
-import com.twitter.hbc.core.endpoint.StatusesSampleEndpoint;
-import com.twitter.hbc.core.processor.StringDelimitedProcessor;
-import com.twitter.hbc.httpclient.BasicClient;
-import com.twitter.hbc.httpclient.auth.Authentication;
-import com.twitter.hbc.httpclient.auth.OAuth1;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+//for twitter4j
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.Status;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+//for ROME library
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
+import com.sun.syndication.feed.synd.SyndEntry;
+import java.net.URL;
+import java.io.InputStreamReader;
+import java.util.List;
 
 /** *************************************************
  * Twitter Bot.
- * <p>
  * @author Lawrence L
  *
  * ************************************************** */
 public class NewsBot{
 
     /** *************************************************
-     * Reads the keys from the properties file.
+     * Reads the keys/credentials from the properties file.
      * @return Properties object containing Twitter keys
      *
      * ************************************************** */
-    public static Properties getPropValues() throws FileNotFoundException{
+    public static Properties getCredentials() throws FileNotFoundException{
         String propFilename = "twitter.properties";
         InputStream inStream = null;
         Properties prop = new Properties();
@@ -43,81 +50,108 @@ public class NewsBot{
 
         try{
             prop.load(inStream);
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (Exception ex){
+            ex.printStackTrace();
+            System.out.println("ERROR: "+ex.getMessage());
         }
 
         return prop;
     }
 
     /** *************************************************
-     * Uses the keys and access the Twtitter API.
+     * Uses the keys and access the Twtitter API vis Twitter4J.
      * @param consumerKey api key1
      * @param comsumerSecret api key2
      * @param token token key1
-     * @param secret token key2
+     * @param tokenSecret token key2
      *
      * ************************************************** */
-    public static void run(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
-        // Create an appropriately sized blocking queue
-        BlockingQueue<String> queue = new LinkedBlockingQueue<String>(100000);
+    public static Twitter connectTwitterAPI(
+        String consumerKey, String consumerSecret,
+        String token, String tokenSecret){
 
-        // Define our endpoint: By default, delimited=length is set (we need this for our processor)
-        // and stall warnings are on.
-        StatusesSampleEndpoint endpoint = new StatusesSampleEndpoint();
-        endpoint.stallWarnings(false);
+            try {
+                Twitter twitter = new TwitterFactory().getSingleton();
 
-        Authentication auth = new OAuth1(consumerKey, consumerSecret, token, secret);
+                twitter.setOAuthConsumer(consumerKey, consumerSecret);
+                AccessToken accessToken =
+                    new AccessToken(token, tokenSecret);
 
-        // Create a new BasicClient. By default gzip is enabled.
-        BasicClient client = new ClientBuilder()
-            .name("NewsBot-Client01")    // optional: mainly for the logs
-            .hosts(Constants.STREAM_HOST)
-            .endpoint(endpoint)
-            .authentication(auth)
-            .processor(new StringDelimitedProcessor(queue))
-            .build();
+                twitter.setOAuthAccessToken(accessToken);
 
-        // Establish a connection
-        client.connect();
-
-        // Do whatever needs to be done with messages
-        for (int msgRead = 0; msgRead < 5; msgRead++) {
-            if (client.isDone()) {
-                System.out.println("Client connection closed unexpectedly: " + client.getExitEvent().getMessage());
-                break;
+                return twitter;
+            } catch (Exception ex){
+                ex.printStackTrace();
+                System.out.println("ERROR: "+ex.getMessage());
             }
 
-            String msg = queue.poll(5, TimeUnit.SECONDS);
-            if (msg == null) {
-                System.out.println("Did not receive a message in 5 seconds");
-            } else {
-                System.out.println(msg);
-            }
-        }
-
-        client.stop();
+            return null;
     }
 
+
+    public static SyndEntry readFeed(String urlString){
+        try {
+            URL feedUrl = new URL(urlString);
+
+            SyndFeedInput input = new SyndFeedInput();
+            SyndFeed feed = input.build(new XmlReader(feedUrl));
+            List<SyndEntry> entries = feed.getEntries();
+            SyndEntry entry = entries.get(0);
+
+            return entry;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("ERROR: "+ex.getMessage());
+        }
+
+        return null;
+    }
 
     public static void main(String[] args){     
         Properties p = null;
 
-        //get properties
+        //get keys to access the api
         try{
-            p = getPropValues();
+            p = getCredentials();
         } catch(FileNotFoundException fnfe){
             fnfe.getMessage();
         }
 
-        //connect to twitter
-        try{
-            NewsBot.run(    p.getProperty("consumer_key"),
-                            p.getProperty("consumer_api"),
-                            p.getProperty("access_token_key"),
-                            p.getProperty("access_token_secret")   );
-        } catch(InterruptedException ie){
-            System.out.println(ie);
+        //connect to twitter using the credentials parsed earlier
+        Twitter twit = connectTwitterAPI(
+                p.getProperty("consumer_key"), p.getProperty("consumer_api"),
+                p.getProperty("access_token_key"), p.getProperty("access_token_secret"));
+
+        String url = "http://rss.cnn.com/rss/cnn_topstories.rss";
+        //String url = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom";
+
+        //read rss feed
+        SyndEntry se = readFeed(url);
+
+        //try to post a status update
+        Status status = null;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = null;
+
+        while(true){
+            date = new Date();
+            try{
+                status = twit.updateStatus(
+                        "TS: " + dateFormat.format(date) +
+                        " Tit: " + se.getTitle() +
+                        " ID: " + se.getUri() +
+                        " Pub: " + se.getPublishedDate() );
+                System.out.println("Successfully updated the status to [" + status.getText() + "].");
+                Thread.sleep(60000);
+            } catch (TwitterException te) {
+                te.printStackTrace();
+                System.out.println("ERROR: "+te.getMessage());
+            } catch (InterruptedException ie) {
+                //call to Thread.sleep
+                ie.printStackTrace();
+                System.out.println("ERROR: "+ie.getMessage());
+            }
         }
-    }
-}
+    } //end main
+} //end NewsBot

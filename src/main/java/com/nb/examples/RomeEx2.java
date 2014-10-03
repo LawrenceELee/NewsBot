@@ -1,4 +1,4 @@
-package com.nb;
+package com.nb.examples;
 
 import com.sun.syndication.feed.synd.SyndCategoryImpl;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -11,7 +11,7 @@ import com.sun.syndication.io.XmlReader;
 import java.net.URL;
 import java.util.List;
 
-public class RomeLibEx{
+public class RomeEx2{
     public static void main(String[] args) {
         try {
             String urlString = "http://feeds.reuters.com/reuters/topNews";

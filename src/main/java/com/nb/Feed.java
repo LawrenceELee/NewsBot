@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -21,13 +23,23 @@ import com.sun.syndication.io.XmlReader;
 
 
 public class Feed{
-    SyndFeed feed = null;
-    SyndFeedOutput outFeed = null;
-    Date lastUpdated = new Date(0); //set date to minimum value
-    Date mostRecent  = new Date(1);
-    Date lastUpdatedFeed = new Date(0);
+    private SyndFeed feed = null;
+    private SyndFeedOutput outFeed = null;
 
-    List entries = new ArrayList();
+    Date lastUpdated = new Date(0);
+    Date mostRecent  = new Date(1);
+    //set date to minimum value to get all entries.
+    //set date to now to get entries from now on-ward.
+
+    private List entries = new ArrayList();
+
+    //only RSS feeds work. no Atom feeds.
+    String[] urls = {
+        //"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom",
+        //"http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305",
+        "http://rss.cnn.com/rss/cnn_topstories.rss",
+        "http://www.reuters.com/rssFeed/topNews"
+    };
 
     public Feed(){
         feed = new SyndFeedImpl();
@@ -45,22 +57,14 @@ public class Feed{
 
     /** *************************************************
      * This creates a news list with all the newest entries since
-     * last run of build().
+     * last run of parseFeed().
      *
      * ************************************************** */
-    public void build(){
-        String[] urls = {
-            //"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom",
-            "http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305"
-            "http://rss.cnn.com/rss/cnn_topstories.rss",
-            "http://www.reuters.com/rssFeed/topNews"
-        };
-
+    public void parseFeed(){
         entries = new ArrayList();
         feed.setEntries(entries);
 
         for( int i=0; i < urls.length; ++i ){
-
             URL inputURL = null;
             SyndFeedInput input = null;
             SyndFeed inFeed = null;
@@ -70,20 +74,18 @@ public class Feed{
                 input = new SyndFeedInput();
                 inFeed = input.build(new XmlReader(inputURL));
                 
-                //entries.addAll(inFeed.getEntries());
-
+                //create a whole new list and add the new items to it.
                 for( SyndEntry entry: (List<SyndEntry>)inFeed.getEntries() ){
                     if(entry.getPublishedDate().after(lastUpdated)){
                         entries.add(entry);
 
+                        //find the most recent entry (like finding the max value)
                         if(entry.getPublishedDate().after(mostRecent)){
                             mostRecent = entry.getPublishedDate();
                         }
                     }
                 }
-
                 lastUpdated = mostRecent;
-                
 
             } catch( Exception ex ){
                 ex.printStackTrace();
@@ -94,6 +96,10 @@ public class Feed{
 
     public boolean isUpdated(){
         return !entries.isEmpty();
+    }
+
+    public Date getLastUpdate(){
+        return lastUpdated;
     }
 
     public void output(){
@@ -113,19 +119,21 @@ public class Feed{
     //tester/client
     public static void main(String args[]){
         Feed myfeed = new Feed();
+        DateFormat df = new SimpleDateFormat("MM-DD HH:mm:ss z");
 
         while(true){
-            myfeed.build();
+            myfeed.parseFeed();
             if(myfeed.isUpdated()){
-                System.out.println("Most recent entry: " + myfeed.mostRecent);
+                System.out.println("==========");
+                System.out.println("Most recent entry: " + df.format(myfeed.mostRecent));
+                System.out.println("Most recent entry: " + df.format(myfeed.lastUpdated));
                 for( SyndEntry e: myfeed.getEntries() ){
-                    System.out.println("URL: " + e.getTitle());
+                    System.out.println("Title: " + e.getTitle());
                     System.out.println("URL: " + e.getUri());
-                    System.out.println("Publish Date: " + e.getPublishedDate());
+                    System.out.println("Pub Date: " + df.format(e.getPublishedDate()));
                     System.out.println();
                 }
             }
-
             try{
                 Thread.sleep(10000);    //wait 10 seconds
             } catch (InterruptedException ie){

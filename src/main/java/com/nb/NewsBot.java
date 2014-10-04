@@ -110,6 +110,7 @@ public class NewsBot{
 
     public static void main(String[] args){     
         Properties p = null;
+        Status status = null;
 
         //get keys to access the api
         try{
@@ -123,6 +124,42 @@ public class NewsBot{
                 p.getProperty("consumer_key"), p.getProperty("consumer_api"),
                 p.getProperty("access_token_key"), p.getProperty("access_token_secret"));
 
+
+        Feed allFeeds = new Feed();
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+
+        while(true){
+            allFeeds.parseFeed();
+            if(allFeeds.isUpdated()){
+                System.out.println("==========");
+                System.out.println("Most recent entry: " + df.format(allFeeds.mostRecent));
+                for( SyndEntry e: allFeeds.getEntries() ){
+                    try{
+                        status = twit.updateStatus(
+                                "\"" + e.getTitle() + "\" " +
+                                e.getUri() +
+                                " Updated: " + df.format(e.getPublishedDate()) +
+                                " #news #cnn #reuters"
+                        );
+                    } catch (TwitterException te) {
+                        te.printStackTrace();
+                        System.out.println("ERROR: "+te.getMessage());
+                    }
+                    System.out.println("Successfully updated the status to [" + status.getText() + "].");
+                }
+            }
+            try{
+                Thread.sleep(10000);    //wait 10 seconds
+            } catch (InterruptedException ie) {
+                //call to Thread.sleep
+                ie.printStackTrace();
+                System.out.println("ERROR: "+ie.getMessage());
+            }
+        }
+
+        /*
+       //old main cold used a stepping stone to build the more
+       //complex code above.
         String url = "http://rss.cnn.com/rss/cnn_topstories.rss";
         //String url = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom";
 
@@ -153,5 +190,6 @@ public class NewsBot{
                 System.out.println("ERROR: "+ie.getMessage());
             }
         }
+        */
     } //end main
 } //end NewsBot

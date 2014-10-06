@@ -138,8 +138,7 @@ public class NewsBot{
                         status = twit.updateStatus(
                                 "\"" + e.getTitle() + "\" " +
                                 e.getUri() +
-                                " Updated: " + df.format(e.getPublishedDate()) +
-                                " #news #cnn #reuters"
+                                " #news @BBC @CNN @Reuters"
                         );
                     } catch (TwitterException te) {
                         te.printStackTrace();

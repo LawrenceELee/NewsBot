@@ -1,8 +1,5 @@
 /** *************************************************
- * Represents an aggregated list of CNN and Reuters RSS feeds
- * into a single feed.
- *
- * Only works for RSS, not Atom.
+ * Represents an USGS/Atom feeds.
  *
  * ************************************************** */
 
@@ -24,41 +21,31 @@ import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
 
-public class Feed{
+public class FeedAtom{
     private SyndFeed feed = null;
     private SyndFeedOutput outFeed = null;
 
     Date lastUpdated = new Date(0);
     Date mostRecent  = new Date(1);
-    //set date to minimum value to get all entries.
-    //set date to now to get entries from now on-ward.
-    //Date lastUpdated = new Date();
-    //Date mostRecent  = new Date();
 
     private List entries = new ArrayList();
 
     //only RSS feeds work. no Atom feeds.
     String[] urls = {
-        //"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom",
-        //"http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305",
-        //nfl live score updates
-        //http://www.nfl.com/liveupdate/scorestrip/ss.xml
-        "http://rss.cnn.com/rss/cnn_topstories.rss",
-        "http://www.reuters.com/rssFeed/topNews",
-        "http://feeds.bbci.co.uk/news/rss.xml",
-        "http://america.aljazeera.com/content/ajam/articles.rss"
+        "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom",
+        "http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305"
     };
 
-    public Feed(){
+    public FeedAtom(){
         feed = new SyndFeedImpl();
-        feed.setFeedType("rss_1.0");
+        feed.setFeedType("atom_0.3");
         /*
         valid values are:   rss_0.9, rss_0.91U, rss_0.91N, rss_0.92, rss_0.93,
                             rss_0.94, rss_1.0, rss_2.0 & atom_0.3
         */
 
-        feed.setTitle("RSS Aggregated Feed");
-        feed.setDescription("Combine RSS feeds for Twitter Bot.");
+        feed.setTitle("Atom Aggregated Feed");
+        feed.setDescription("Combine Atom feeds for Twitter Bot.");
         feed.setAuthor("None");
         feed.setLink("http://www.example.com");
     }
@@ -93,14 +80,13 @@ public class Feed{
                         }
                     }
                 }
+                lastUpdated = mostRecent;
 
             } catch( Exception ex ){
                 ex.printStackTrace();
                 System.out.println("ERROR: "+ex.getMessage());
             }
         }
-
-        lastUpdated = mostRecent;
     }
 
     public boolean isUpdated(){
@@ -113,16 +99,6 @@ public class Feed{
 
     public List<SyndEntry> getEntries(){
         return entries;
-    }
-
-    public void output(){
-        try{
-            outFeed = new SyndFeedOutput();
-            outFeed.output(feed, new PrintWriter(System.out), true);
-        } catch( Exception ex ){
-            ex.printStackTrace();
-            System.out.println("ERROR: "+ex.getMessage());
-        }
     }
 
     //tester/client
@@ -150,6 +126,8 @@ public class Feed{
                 System.out.println("ERROR: "+ie.getMessage());
             }
         }
+    }
 
-    } //end main()
-} //end class Feed
+
+
+}

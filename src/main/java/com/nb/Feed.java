@@ -43,6 +43,7 @@ public class Feed{
         //"http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305",
         //nfl live score updates
         //http://www.nfl.com/liveupdate/scorestrip/ss.xml
+        "http://www.buzzfeed.com/index.xml",
         "http://rss.cnn.com/rss/cnn_topstories.rss",
         "http://www.reuters.com/rssFeed/topNews",
         "http://feeds.bbci.co.uk/news/rss.xml",
@@ -99,7 +100,6 @@ public class Feed{
                 System.out.println("ERROR: "+ex.getMessage());
             }
         }
-
         lastUpdated = mostRecent;
     }
 

@@ -25,6 +25,11 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import java.net.URL;
 import java.io.InputStreamReader;
 import java.util.List;
+//extra stuff needed by atom feed
+import com.sun.syndication.feed.synd.SyndLinkImpl;
+import com.sun.syndication.feed.synd.SyndCategoryImpl;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+
 
 /** *************************************************
  * Twitter Bot.
@@ -110,7 +115,7 @@ public class NewsBot{
 
     public static void main(String[] args){     
         Properties p = null;
-        Status status = null;
+
 
         //get keys to access the api
         try{
@@ -120,33 +125,73 @@ public class NewsBot{
         }
 
         //connect to twitter using the credentials parsed earlier
-        Twitter twit = connectTwitterAPI(
+        Twitter myTwitter = connectTwitterAPI(
                 p.getProperty("consumer_key"), p.getProperty("consumer_api"),
                 p.getProperty("access_token_key"), p.getProperty("access_token_secret"));
 
 
-        Feed allFeeds = new Feed();
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        Feed rssFeed = new Feed();
+        FeedAtom atomFeed = new FeedAtom();
+
+        Status status = null;
+        String tweet = null;
+        DateFormat df = new SimpleDateFormat("yyyy-M-d HH:mm:ss z");
 
         while(true){
-            allFeeds.parseFeed();
-            if(allFeeds.isUpdated()){
+            //for RSS Feeds
+            rssFeed.parseFeed();
+            if(rssFeed.isUpdated()){
                 System.out.println("==========");
-                System.out.println("Most recent entry: " + df.format(allFeeds.mostRecent));
-                for( SyndEntry e: allFeeds.getEntries() ){
+                System.out.println("Most recent rss entry: " + df.format(rssFeed.mostRecent));
+
+                for( SyndEntry e: rssFeed.getEntries() ){
                     try{
-                        status = twit.updateStatus(
+                        tweet = new String(
                                 "\"" + e.getTitle() + "\" " +
-                                e.getUri() +
-                                " #news @BBC @CNN @Reuters"
-                        );
+                                e.getUri() + " " +
+                                "#news #BBC #CNN #Reuters");
+
+                        status = myTwitter.updateStatus(tweet);
+                        System.out.println("Successfully updated the status to [" + status.getText() + "].");
                     } catch (TwitterException te) {
                         te.printStackTrace();
                         System.out.println("ERROR: "+te.getMessage());
                     }
-                    System.out.println("Successfully updated the status to [" + status.getText() + "].");
+                }
+
+            }
+
+            //for Atom Feeds
+            atomFeed.parseFeed();
+            if(atomFeed.isUpdated()){
+                System.out.println("==========");
+                System.out.println("Most recent atom entry: " + df.format(atomFeed.mostRecent));
+                for( SyndEntry e: atomFeed.getEntries() ){
+                    List<SyndLinkImpl> links = e.getLinks();
+                    SyndLinkImpl firstLink = links.get(0);
+
+                    try{
+                        //problem getTitle() is causing the 404 resource
+                        //not found error.
+                        //The "M " at the beginning is causing the error
+                        //As a temporary work around, just pre-append
+                        //"Magnitude" to the beginning of the tweet.
+                        tweet = new String(
+                                "\"Magnituede: " + e.getTitle() + "\" " +
+                                firstLink.getHref() + " " +
+                                df.format(e.getUpdatedDate()) + " " +
+                                "#news #earthquakes #quakes");
+
+                        //System.out.println(tweet);
+                        status = myTwitter.updateStatus(tweet);
+                        System.out.println("Successfully updated the status to [" + status.getText() + "].");
+                    } catch (TwitterException te) {
+                        te.printStackTrace();
+                        System.out.println("ERROR: "+te.getMessage());
+                    }
                 }
             }
+
             try{
                 Thread.sleep(10000);    //wait 10 seconds
             } catch (InterruptedException ie) {
@@ -154,7 +199,7 @@ public class NewsBot{
                 ie.printStackTrace();
                 System.out.println("ERROR: "+ie.getMessage());
             }
-        }
+        } //end while polling loop
 
         /*
        //old main cold used a stepping stone to build the more

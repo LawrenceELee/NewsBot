@@ -30,15 +30,15 @@ public class FeedAtom{
     private SyndFeed feed = null;
     private SyndFeedOutput outFeed = null;
 
-    Date lastUpdated = new Date(0);
-    Date mostRecent  = new Date(1);
+    Date lastUpdated = new Date();
+    Date mostRecent  = new Date();
 
     private List entries = new ArrayList();
 
     //only Atom feeds work. no RSS feeds. The spec for Atom doesn't
     //have Published Date. It uses Updated Date instead.
     String[] urls = {
-        "http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305",
+        //"http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305",
 
         //all mag earthquakes from the past hour
         //"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom"
@@ -155,8 +155,8 @@ public class FeedAtom{
 
     //tester/client
     public static void main(String args[]){
+        DateFormat df = new SimpleDateFormat("yyyy-M-d HH:mm:ss z");
         FeedAtom myfeed = new FeedAtom();
-        DateFormat df = new SimpleDateFormat("M-d-yyyy HH:mm:ss z");
         List<SyndLinkImpl> links = null;
 
         while(true){
@@ -174,6 +174,7 @@ public class FeedAtom{
                     links = entry.getLinks();
                     SyndLinkImpl firstLink = links.get(0);
                     System.out.println("URL: " + firstLink.getHref() );
+
                     System.out.print("<a href=\"" + firstLink.getHref() + "\">");
                     System.out.print(entry.getTitle());
                     System.out.print("</a>");

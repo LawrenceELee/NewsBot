@@ -28,12 +28,12 @@ public class Feed{
     private SyndFeed feed = null;
     private SyndFeedOutput outFeed = null;
 
-    Date lastUpdated = new Date(0);
-    Date mostRecent  = new Date(1);
+    //Date lastUpdated = new Date(0);
+    //Date mostRecent  = new Date(1);
     //set date to minimum value to get all entries.
     //set date to now to get entries from now on-ward.
-    //Date lastUpdated = new Date();
-    //Date mostRecent  = new Date();
+    Date lastUpdated = new Date();
+    Date mostRecent  = new Date();
 
     private List entries = new ArrayList();
 
@@ -43,7 +43,7 @@ public class Feed{
         //"http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305",
         //nfl live score updates
         //http://www.nfl.com/liveupdate/scorestrip/ss.xml
-        "http://www.buzzfeed.com/index.xml",
+        //"http://www.buzzfeed.com/index.xml",
         "http://rss.cnn.com/rss/cnn_topstories.rss",
         "http://www.reuters.com/rssFeed/topNews",
         "http://feeds.bbci.co.uk/news/rss.xml",
